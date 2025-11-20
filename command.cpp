@@ -1,7 +1,5 @@
 #include "command.h"
 
-using namespace std;
-
 /*
   Translated from the implementation of Zuul from Jason Galbraith
   https://drive.google.com/drive/folders/18O6fa2z_WlCBkEIG1eKb8Y57l-PoGaWy
