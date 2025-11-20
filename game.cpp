@@ -13,9 +13,11 @@ using namespace std;
   https://drive.google.com/drive/folders/18O6fa2z_WlCBkEIG1eKb8Y57l-PoGaWy
 */
 
+//Global parser and current room pointer
 Parser::Parser* Game::parser = new Parser::Parser();
 Room::Room* Game::currentRoom;
 
+//Create the game and intialize its internal map
 Game::Game()
 {
   Game::createRooms();
@@ -23,10 +25,14 @@ Game::Game()
   Game::winNum = 0;
 }
 
+//Main play routine, loops until end of play
 void Game::play()
 {
   Game::printWelcome();
 
+  //Enter the main command loop, here we repeatedly read commands and
+  //execute them until the game is over
+  
   bool finished = false;
   while(!finished)
     {
@@ -36,12 +42,16 @@ void Game::play()
   cout << "Thank you for playing. Good bye.";
 }
 
+//Print out the openening message for the player
 void Game::printWelcome()
 {
   cout << "\nWelcome to Adventure! \n Adventure is a new, incredibly boring adventure game. \nType 'help' if you need help.\n";
   cout << currentRoom.getLongDescription();
 }
 
+
+//Given a command, process the command
+//If theis command ends the game, true is returned, otherwise false is returned
 bool Game::processCommand(Command::Command* command)
 {
   bool wantToQuit = false;
@@ -79,21 +89,25 @@ bool Game::processCommand(Command::Command* command)
   return wantToQuit;
 }
 
+//Implementations of user commands
+
+//Uses item if in correct room
 void useItem(Command::Command* command)
 {
   if(command == NULL) { cout << "Use what?"; return; }
 
   if(strcmp(command.getSolutionRoom(), Game::currentRoom) == 0)
     {
+      //Win conditions
       if(strcmp(command.getName(), "Food Note") == 0 and Game::winNum == 3)
 	{
 	  cout << command.getSolutionText();
 	  Game::winNum = 0;
 	  return;
 	}
-      if(strcmp(command.getName(), "Gouda Cheese Bites") or
-	 strcmp(command.getName(), "Brie") or
-	 strcmp(command.getName(), "Popsicles"))
+      if(strcmp(command.getName(), "Gouda Cheese Bites") == 0 or
+	 strcmp(command.getName(), "Brie") == 0 or
+	 strcmp(command.getName(), "Popsicles") == 0)
 	{
 	  Game::winNum += 1;
 	}
@@ -104,35 +118,43 @@ void useItem(Command::Command* command)
   else { cout << "You can't use that here"; }
 }
 
+//Print out some help information, here we print some stupid cryptic message and a list of all the command
 void printHelp()
 {
   cout << "You are lost. You are alone. You wander around the school. \nYour command words are:";
   Game::parser.showCommands();
 }
 
+//Try to go one directions, if there is an exit, enter the new room, otherwise print an error message
 void goRoom(Command::Command* command)
 {
+  //If there is no second word, we don't know where to go
   if(!command->hasSecondWord()) { cout << "Go where?"; return; }
 
   Room::Room* nextRoom = Game::currentRoom->getExit(command->getSecondWord());
 
+  //Try to leave current room
   if(nextRoom == NULL) { cout << "There is no door!" }
   else
     {
       Game::currentRoom = nextRoom;
       cout << Game::currentRoom.getLongDescription();
 
+      //Prints out items in room, if any
       if(Game::currentRoom.getItems().size() > 0) { cout << "There are items:" }
       for(int i = 0; i < Game::currentRoom.getItems().size(); i++) { cout << Game::currentRoom.getItems()[i].getName(); }
     }
 }
 
+//"Quit" was entered, check the rest fo the command we really quit the game
+//Return true, if this command quits the game, false otherwise
 bool quitGame(Command::Command* command)
 {
   if(command->hasSecondWord()) { cout << "Quit what?"; return false; }
   else { return true; }
 }
-  
+
+//Create all the rooms and link their exits together
 void Game::createRooms()
 {
   //Create the rooms
@@ -241,3 +263,4 @@ void Game::createRooms()
 				     "That was delicious.");
 
   Game::currentRoom = &(Game::rooms.find("foyer")->second);
+}

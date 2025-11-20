@@ -13,9 +13,13 @@ class Game
   void play();
   
  private:
+  //Holds items
   Inventory::Inventory* inventory;
   int winNum;
+
+  //Holds rooms
   map<string, Room::Room*> rooms;
+
   void printWelcome();
   bool processCommand(Command::Command* command);
   void useItem(Command::Command* command);
