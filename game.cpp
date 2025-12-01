@@ -46,7 +46,7 @@ void Game::play()
 void Game::printWelcome()
 {
   cout << "\nWelcome to Adventure! \n Adventure is a new, incredibly boring adventure game. \nType 'help' if you need help.\n";
-  currentRoom.getLongDescription(); //Just couts internally in room.cpp
+  currentRoom.printLongDescription(); //Just couts internally in room.cpp
 }
 
 
@@ -138,7 +138,7 @@ void goRoom(Command::Command* command)
   else
     {
       Game::currentRoom = nextRoom;
-      cout << Game::currentRoom.getLongDescription();
+      Game::currentRoom.printLongDescription(); //Just couts internally in room.cpp
 
       //Prints out items in room, if any
       if(Game::currentRoom.getItems().size() > 0) { cout << "There are items:" }
