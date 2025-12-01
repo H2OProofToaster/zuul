@@ -46,7 +46,7 @@ void Game::play()
 void Game::printWelcome()
 {
   cout << "\nWelcome to Adventure! \n Adventure is a new, incredibly boring adventure game. \nType 'help' if you need help.\n";
-  cout << currentRoom.getLongDescription();
+  currentRoom.getLongDescription(); //Just couts internally in room.cpp
 }
 
 
