@@ -15,6 +15,7 @@ void Inventory::addItem(char* name, char* description, char* solutionRoom, char*
 }
 
 //I don't wanna do this
+//Removes an item from an inventory
 void Inventory::removeItem(char* name)
 {
   for(int i = 0; i < items.size(); i++)
@@ -27,3 +28,12 @@ void Inventory::removeItem(char* name)
     }
 }
 
+//Returns a pointer to an item with a specific name
+Item::Item* getItem(char* name)
+{
+  for(int i = 0; i < items.size(); i++)
+    {
+      if(strcmp(items[i]->getName(), name) == 0) { return items[i]; }
+    }
+  return nullptr;
+}
