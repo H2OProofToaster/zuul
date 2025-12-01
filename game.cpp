@@ -66,7 +66,7 @@ bool Game::processCommand(Command::Command* command)
   else if(strcmp(commandWord, "go")) { Game::goRoom(command); }
   else if(strcmp(commandWord, "inventory") == 0)
     {
-      for(int i = 0; i < Game::inventory.getItems().size(); i++) { cout << Game::inventory.getItems[i].getName(); }
+      for(int i = 0; i < Game::inventory.getItems().size(); i++) { cout << Game::inventory.getItems()[i]->getName(); }
     }
   else if(strcmp(commandWord, "quit") == 0) { wantToQuit = Game::quitGame(command); }
   else if(strcmp(Commandword, "use") == 0) { Game::useItem(Game::inventory.getItem(command->getSecondWord())); }
