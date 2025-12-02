@@ -20,6 +20,7 @@ class Inventory
   void addItem(char* name, char* description, char* solutionRoom, char* solutionText);
   void removeItem(char* name);
   Item::Item* getItem(char* name);
+  vector<Item::Item*> getItems();
 }
 
 #endif

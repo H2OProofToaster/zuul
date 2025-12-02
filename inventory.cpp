@@ -37,3 +37,6 @@ Item::Item* getItem(char* name)
     }
   return nullptr;
 }
+
+vector<Item::Item*> getItems()
+{ return items; }
