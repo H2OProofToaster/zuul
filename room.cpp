@@ -2,6 +2,9 @@
 #include <map>
 #include <cstring>
 #include "inventory.h"
+#include <iostream>
+#include "item.h"
+#inlcude <vector>
 
 /*
   Translated from the implementation of Zuul from Jason Galbraith
@@ -25,6 +28,19 @@ char* getShortDescription()
 
 void printLongDescription()
 {
-  //I don't wanna do this today, remember combined with setExitString from python
-  return
+  std::cout << "You are " << description << "." << endl;
+  for(int i = exits.begin(); i != exits.end(); i++)
+    {
+      if(i == exits.end()) { std::cout << i->first; }
+      std::cout << i->first << ", ";
+    }
 }
+
+Room* getExit(char* direction)
+{ return exits[direction]; }
+
+Item* getItem(char* name)
+{ return inventory.getItem(name); }
+
+vector<Item::Item*> getItems()
+{ return inventory.getItems(); }

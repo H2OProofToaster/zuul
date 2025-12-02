@@ -4,6 +4,8 @@
 #include <cstring>
 #include <map>
 #include "inventory.h"
+#include "item.h"
+#include <vector>
 
 /*
   Translated from the implementation of Zuul from Jason Galbraith
@@ -20,11 +22,11 @@ class Room
   char* getShortDescription();
   void printLongDescription();
   Room* getExit(char* direction);
-  Item* getItem(char* name);
-  Item* getItems();
+  Item::Item* getItem(char* name);
+  vector<Item::Item*> getItems();
   
  private:
   map<char*, Room*> exits;
   char* description;
-  Inventory inventory;
+  Inventory::Inventory inventory;
 }
