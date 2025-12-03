@@ -21,8 +21,8 @@ Room::Room* Game::currentRoom;
 Game::Game()
 {
   Game::createRooms();
-  Inventory::Inventory* Game::inventory = new Inventory::Inventory();
-  Game::winNum = 0;
+  Inventory::Inventory* inventory = new Inventory::Inventory();
+  winNum = 0;
 }
 
 //Main play routine, loops until end of play
@@ -36,8 +36,8 @@ void Game::play()
   bool finished = false;
   while(!finished)
     {
-      Command::Command* command = parser.getCommand();
-      finished = processCommand(command);
+      Command::Command* command = parser->getCommand();
+      finished = Game::processCommand(command);
     }
   cout << "Thank you for playing. Good bye.";
 }
@@ -46,7 +46,7 @@ void Game::play()
 void Game::printWelcome()
 {
   cout << "\nWelcome to Adventure! \n Adventure is a new, incredibly boring adventure game. \nType 'help' if you need help.\n";
-  currentRoom.printLongDescription(); //Just couts internally in room.cpp
+  Game::currentRoom->printLongDescription(); //Just couts internally in room.cpp
 }
 
 
@@ -58,7 +58,7 @@ bool Game::processCommand(Command::Command* command)
 
   if(command == NULL) { return false; }
 
-  if(command.isUnknown()) { cout << "I don't know what you mean..."; return false; }
+  if(command->isUnknown()) { cout << "I don't know what you mean..."; return false; }
 
   Command::Command* commandWord = command->getCommandWord();
 
@@ -66,24 +66,24 @@ bool Game::processCommand(Command::Command* command)
   else if(strcmp(commandWord, "go")) { Game::goRoom(command); }
   else if(strcmp(commandWord, "inventory") == 0)
     {
-      for(int i = 0; i < Game::inventory.getItems().size(); i++) { cout << Game::inventory.getItems()[i]->getName(); }
+      for(int i = 0; i < inventory->getItems().size(); i++) { cout << inventory->getItems()[i]->getName(); }
     }
   else if(strcmp(commandWord, "quit") == 0) { wantToQuit = Game::quitGame(command); }
-  else if(strcmp(Commandword, "use") == 0) { Game::useItem(Game::inventory.getItem(command->getSecondWord())); }
+  else if(strcmp(Commandword, "use") == 0) { Game::useItem(inventory->getItem(command->getSecondWord())); }
   else if(strcmp(CommandWord, "drop") == 0)
     {
       if(strcmp(command->getSecondWord(), "") == 0) { cout << "Drop what?"; return wantToQuit; }
-      Item::Item* itemTemp = Game::inventory.getItem(command->getSecondWord());
-      Game::inventory.removeItem(itemTemp);
-      Game::currentRoom.addItem(itemTemp.getName(), itemTemp.getDescription(), itemTemp.getSolutionRoom(), itmeTemp.getSolutionText());
+      Item::Item* itemTemp = inventory->getItem(command->getSecondWord());
+      inventory->removeItem(itemTemp);
+      Game::currentRoom->addItem(itemTemp->getName(), itemTemp->getDescription(), itemTemp->getSolutionRoom(), itmeTemp->getSolutionText());
     }
   else if(strcmp(commandWord, "pickup") == 0)
     {
       if(strcmp(command->getSecondWord(), "")) { cout << "Pickup what?"; return wantToQuit; }
-      Item::Item* itemTemp = Game::currentRoom.getItem(command->getSecondWord());
-      Game::currentRoom.removeItem(itemTemp);
-      Game::inventory.addItem(itemTemp.getName(), itemTemp.getDescription(), itemTemp.getSolution(), itemTemp.getSolutionText());
-      cout << itemTemp.getDescription();
+      Item::Item* itemTemp = Game::currentRoom->getItem(command->getSecondWord());
+      Game::currentRoom->removeItem(itemTemp);
+      inventory->addItem(itemTemp->getName(), itemTemp->getDescription(), itemTemp->getSolution(), itemTemp->getSolutionText());
+      cout << itemTemp->getDescription();
     }
 
   return wantToQuit;
@@ -96,24 +96,24 @@ void useItem(Command::Command* command)
 {
   if(command == NULL) { cout << "Use what?"; return; }
 
-  if(strcmp(command.getSolutionRoom(), Game::currentRoom) == 0)
+  if(strcmp(command->getSolutionRoom(), Game::currentRoom) == 0)
     {
       //Win conditions
-      if(strcmp(command.getName(), "Food Note") == 0 and Game::winNum == 3)
+      if(strcmp(command->getName(), "Food Note") == 0 and winNum == 3)
 	{
-	  cout << command.getSolutionText();
-	  Game::winNum = 0;
+	  cout << command->getSolutionText();
+	  winNum = 0;
 	  return;
 	}
-      if(strcmp(command.getName(), "Gouda Cheese Bites") == 0 or
-	 strcmp(command.getName(), "Brie") == 0 or
-	 strcmp(command.getName(), "Popsicles") == 0)
+      if(strcmp(command->getName(), "Gouda Cheese Bites") == 0 or
+	 strcmp(command->getName(), "Brie") == 0 or
+	 strcmp(command->getName(), "Popsicles") == 0)
 	{
-	  Game::winNum += 1;
+	  winNum += 1;
 	}
 
-      cout << command.getSolutionText();
-      Game::inventory.removeItem(command);
+      cout << command->getSolutionText();
+      inventory->removeItem(command);
     }
   else { cout << "You can't use that here"; }
 }
@@ -122,7 +122,7 @@ void useItem(Command::Command* command)
 void printHelp()
 {
   cout << "You are lost. You are alone. You wander around the school. \nYour command words are:";
-  Game::parser.showCommands();
+  Game::parser->showCommands();
 }
 
 //Try to go one directions, if there is an exit, enter the new room, otherwise print an error message
@@ -138,11 +138,11 @@ void goRoom(Command::Command* command)
   else
     {
       Game::currentRoom = nextRoom;
-      Game::currentRoom.printLongDescription(); //Just couts internally in room.cpp
+      Game::currentRoom->printLongDescription(); //Just couts internally in room.cpp
 
       //Prints out items in room, if any
-      if(Game::currentRoom.getItems().size() > 0) { cout << "There are items:" }
-      for(int i = 0; i < Game::currentRoom.getItems().size(); i++) { cout << Game::currentRoom.getItems()[i].getName(); }
+      if(Game::currentRoom->getItems().size() > 0) { cout << "There are items:" }
+      for(int i = 0; i < Game::currentRoom->getItems().size(); i++) { cout << Game::currentRoom->getItems()[i].getName(); }
     }
 }
 
