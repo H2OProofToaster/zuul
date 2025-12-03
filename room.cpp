@@ -24,11 +24,13 @@ void Room::setExit(char* direction, Room* neighbor)
 { exits[direction] = neighbor; }
 
 char* getShortDescription()
-{ return description }
+{ return description; }
 
 void printLongDescription()
 {
   std::cout << "You are " << description << "." << endl;
+
+  //Modified from w3schools.com
   for(int i = exits.begin(); i != exits.end(); i++)
     {
       if(i == exits.end()) { std::cout << i->first; }
