@@ -13,14 +13,14 @@
 class Inventory
 {
  private:
-  vector<Item::Item*> items;
+  std::vector<Item*> items;
 
  public:
   Inventory();
   void addItem(char* name, char* description, char* solutionRoom, char* solutionText);
   void removeItem(char* name);
-  Item::Item* getItem(char* name);
-  vector<Item::Item*> getItems();
-}
+  Item* getItem(char* name);
+  std::vector<Item*> getItems();
+};
 
 #endif

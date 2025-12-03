@@ -14,7 +14,7 @@
 Room::Room(char* descriptionIn)
 {
   strcpy(description, descriptionIn);
-  inventory = new Inventory::Inventory();
+  inventory = new Inventory();
 }
 
 void Room::addItem(char* name, char* description, char* solutionRoom, char* solutionText)
@@ -24,25 +24,25 @@ void Room::setExit(char* direction, Room* neighbor)
 { exits[direction] = neighbor; }
 
 char* getShortDescription()
-{ return description; }
+{ return Room::description; }
 
 void printLongDescription()
 {
-  std::cout << "You are " << description << "." << endl;
+  std::cout << "You are " << Room::description << "." << std::endl;
 
   //Modified from w3schools.com
-  for(int i = exits.begin(); i != exits.end(); i++)
+  for(int i = Room::exits.begin(); i != Room::exits.end(); i++)
     {
-      if(i == exits.end()) { std::cout << i->first; }
+      if(i == Room::exits.end()) { std::cout << i->first; }
       std::cout << i->first << ", ";
     }
 }
 
 Room* getExit(char* direction)
-{ return exits[direction]; }
+{ return Room::exits[direction]; }
 
 Item* getItem(char* name)
-{ return inventory.getItem(name); }
+{ return Room::inventory.getItem(name); }
 
-vector<Item::Item*> getItems()
-{ return inventory.getItems(); }
+std::vector<Item*> getItems()
+{ return Room::inventory.getItems(); }

@@ -3,8 +3,10 @@
 
 #include "inventory.h"
 #include "room.h"
-#inlcude <map>
-#inlcude "command.h"
+#include <map>
+#include "command.h"
+#include "parser.h"
+#include "item.h"
 
 /*
   Translated from the implementation of Zuul from Jason Galbraith
@@ -16,21 +18,24 @@ class Game
  public:
   Game();
   void play();
-  
- private:
+  static Parser* parser;
+  static Room* currentRoom;
+
   //Holds items
-  Inventory::Inventory* inventory;
+  Inventory* inventory;
   int winNum;
 
   //Holds rooms
-  map<string, Room::Room*> rooms;
+  std::map<std::string, Room*> rooms;
 
+ private:
   void printWelcome();
-  bool processCommand(Command::Command* command);
-  void useItem(Command::Command* command);
+  bool processCommand(Command* command);
+  void useItem(Item* command);
   void createRooms();
   void printHelp();
-  void goRoom(Command::Command* command);
-  bool quitGame(Command::Command* command);
+  void goRoom(Command* command);
+  bool quitGame(Command* command);
+};
   
 #endif

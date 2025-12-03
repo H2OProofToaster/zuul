@@ -22,11 +22,13 @@ class Room
   char* getShortDescription();
   void printLongDescription();
   Room* getExit(char* direction);
-  Item::Item* getItem(char* name);
-  vector<Item::Item*> getItems();
+  Item* getItem(char* name);
+  std::vector<Item*> getItems();
   
  private:
-  map<char*, Room*> exits;
+  std::map<char*, Room*> exits;
   char* description;
-  Inventory::Inventory inventory;
-}
+  Inventory inventory;
+};
+
+#endif

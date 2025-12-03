@@ -1,6 +1,7 @@
 #include "commandWords.h"
 #include <vector>
 #include <iostream>
+#include <cstring>
 
 using namespace std;
 
@@ -17,7 +18,7 @@ bool CommandWords::isCommand(char* aString)
 {
   for(int i = 0; i < validCommands.size(); i++)
     {
-      if(strcmp(validcommands[i], aString) == 0) { return true; }
+      if(strcmp(validCommands[i], aString) == 0) { return true; }
     }
 
   //If we get here, the string was not found in the commands

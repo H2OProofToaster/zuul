@@ -5,6 +5,7 @@
 #include "inventory.h"
 #include <map>
 #include <cstring>
+#include "game.h"
 
 using namespace std;
 
@@ -14,14 +15,14 @@ using namespace std;
 */
 
 //Global parser and current room pointer
-Parser::Parser* Game::parser = new Parser::Parser();
-Room::Room* Game::currentRoom;
+Parser* Game::parser = new Parser();
+Room* Game::currentRoom;
 
 //Create the game and intialize its internal map
 Game::Game()
 {
   Game::createRooms();
-  Inventory::Inventory* inventory = new Inventory::Inventory();
+  Inventory* inventory = new Inventory();
   winNum = 0;
 }
 
@@ -36,7 +37,7 @@ void Game::play()
   bool finished = false;
   while(!finished)
     {
-      Command::Command* command = parser->getCommand();
+      Command* command = Game::parser->getCommand();
       finished = Game::processCommand(command);
     }
   cout << "Thank you for playing. Good bye.";
@@ -52,7 +53,7 @@ void Game::printWelcome()
 
 //Given a command, process the command
 //If theis command ends the game, true is returned, otherwise false is returned
-bool Game::processCommand(Command::Command* command)
+bool Game::processCommand(Command* command)
 {
   bool wantToQuit = false;
 
@@ -60,7 +61,7 @@ bool Game::processCommand(Command::Command* command)
 
   if(command->isUnknown()) { cout << "I don't know what you mean..."; return false; }
 
-  Command::Command* commandWord = command->getCommandWord();
+  char* commandWord = command->getCommandWord();
 
   if(strcmp(commandWord, "help") == 0) { Game::printHelp(); }
   else if(strcmp(commandWord, "go")) { Game::goRoom(command); }
@@ -69,20 +70,20 @@ bool Game::processCommand(Command::Command* command)
       for(int i = 0; i < inventory->getItems().size(); i++) { cout << inventory->getItems()[i]->getName(); }
     }
   else if(strcmp(commandWord, "quit") == 0) { wantToQuit = Game::quitGame(command); }
-  else if(strcmp(Commandword, "use") == 0) { Game::useItem(inventory->getItem(command->getSecondWord())); }
-  else if(strcmp(CommandWord, "drop") == 0)
+  else if(strcmp(commandWord, "use") == 0) { Game::useItem(inventory->getItem(command->getSecondWord())); }
+  else if(strcmp(commandWord, "drop") == 0)
     {
       if(strcmp(command->getSecondWord(), "") == 0) { cout << "Drop what?"; return wantToQuit; }
-      Item::Item* itemTemp = inventory->getItem(command->getSecondWord());
-      inventory->removeItem(itemTemp);
-      Game::currentRoom->addItem(itemTemp->getName(), itemTemp->getDescription(), itemTemp->getSolutionRoom(), itmeTemp->getSolutionText());
+      Item* itemTemp = inventory->getItem(command->getSecondWord());
+      inventory->removeItem(itemTemp->getName());
+      Game::currentRoom->addItem(itemTemp->getName(), itemTemp->getDescription(), itemTemp->getSolutionRoom(), itemTemp->getSolutionText());
     }
   else if(strcmp(commandWord, "pickup") == 0)
     {
       if(strcmp(command->getSecondWord(), "")) { cout << "Pickup what?"; return wantToQuit; }
-      Item::Item* itemTemp = Game::currentRoom->getItem(command->getSecondWord());
-      Game::currentRoom->removeItem(itemTemp);
-      inventory->addItem(itemTemp->getName(), itemTemp->getDescription(), itemTemp->getSolution(), itemTemp->getSolutionText());
+      Item* itemTemp = Game::currentRoom->getItem(command->getSecondWord());
+      Game::currentRoom->removeItem(itemTemp->getName());
+      inventory->addItem(itemTemp->getName(), itemTemp->getDescription(), itemTemp->getSolutionRoom(), itemTemp->getSolutionText());
       cout << itemTemp->getDescription();
     }
 
@@ -92,28 +93,28 @@ bool Game::processCommand(Command::Command* command)
 //Implementations of user commands
 
 //Uses item if in correct room
-void useItem(Command::Command* command)
+void useItem(Item* command)
 {
   if(command == NULL) { cout << "Use what?"; return; }
 
-  if(strcmp(command->getSolutionRoom(), Game::currentRoom) == 0)
+  if(strcmp(command->getSolutionRoom(), Game::currentRoom) == 0) //Mmmmmmmmmmmmm loop thru the map
     {
       //Win conditions
-      if(strcmp(command->getName(), "Food Note") == 0 and winNum == 3)
+      if(strcmp(command->getName(), "Food Note") == 0 and Game::winNum == 3)
 	{
 	  cout << command->getSolutionText();
-	  winNum = 0;
+	  Game::winNum = 0;
 	  return;
 	}
       if(strcmp(command->getName(), "Gouda Cheese Bites") == 0 or
 	 strcmp(command->getName(), "Brie") == 0 or
 	 strcmp(command->getName(), "Popsicles") == 0)
 	{
-	  winNum += 1;
+	  Game::winNum += 1;
 	}
 
       cout << command->getSolutionText();
-      inventory->removeItem(command);
+      Game::inventory->removeItem(command);
     }
   else { cout << "You can't use that here"; }
 }
@@ -126,29 +127,29 @@ void printHelp()
 }
 
 //Try to go one directions, if there is an exit, enter the new room, otherwise print an error message
-void goRoom(Command::Command* command)
+void goRoom(Command* command)
 {
   //If there is no second word, we don't know where to go
   if(!command->hasSecondWord()) { cout << "Go where?"; return; }
 
-  Room::Room* nextRoom = Game::currentRoom->getExit(command->getSecondWord());
+  Room* nextRoom = Game::currentRoom->getExit(command->getSecondWord());
 
   //Try to leave current room
-  if(nextRoom == NULL) { cout << "There is no door!" }
+  if(nextRoom == NULL) { cout << "There is no door!"; }
   else
     {
       Game::currentRoom = nextRoom;
       Game::currentRoom->printLongDescription(); //Just couts internally in room.cpp
 
       //Prints out items in room, if any
-      if(Game::currentRoom->getItems().size() > 0) { cout << "There are items:" }
-      for(int i = 0; i < Game::currentRoom->getItems().size(); i++) { cout << Game::currentRoom->getItems()[i].getName(); }
+      if(Game::currentRoom->getItems().size() > 0) { cout << "There are items:"; }
+      for(int i = 0; i < Game::currentRoom->getItems().size(); i++) { cout << Game::currentRoom->getItems()[i]->getName(); }
     }
 }
 
 //"Quit" was entered, check the rest fo the command we really quit the game
 //Return true, if this command quits the game, false otherwise
-bool quitGame(Command::Command* command)
+bool quitGame(Command* command)
 {
   if(command->hasSecondWord()) { cout << "Quit what?"; return false; }
   else { return true; }

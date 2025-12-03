@@ -1,7 +1,7 @@
 #ifndef ITEM_H
 #define ITEM_H
 
-#inlcude <cstring>
+#include <cstring>
 
 /*
   Translated from the implementation of Zuul from Jason Galbraith
@@ -24,4 +24,6 @@ class Item
   char* description;
   char* solutionRoom;
   char* solutionText;
-  
+};
+
+#endif

@@ -12,7 +12,7 @@
 Parser::Parser()
 { commands = new CommandWords::commandWords(); }
 
-Command::Command* Parser::getCommand()
+Command* Parser::getCommand()
 {
   //Tokenize
   char inputLine[40];

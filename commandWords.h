@@ -9,15 +9,14 @@
 
 class CommandWords
 {
- private:
-  //A constant array that holds all valid command words
-  vector<const char*> validCommands = {"go", "quit", "help", "use", "drop", "pickup", "inventory"};
-
  public:
+  //A constant array that holds all valid command words
+  std::vector<const char*> validCommands = {"go", "quit", "help", "use", "drop", "pickup", "inventory"};
+
   CommandWords();
 
   bool isCommand(char* aString);
   void showAll();
-}
+};
 
 #endif

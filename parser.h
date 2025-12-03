@@ -14,8 +14,11 @@ class Parser
 {
  public:
   Parser();
-  Command::Command* getCommand();
+  Command* getCommand();
   void showCommands();
 
  private:
-  CommandWords::CommandWords commands;
+  CommandWords commands;
+};
+
+#endif
