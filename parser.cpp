@@ -12,7 +12,7 @@
 Parser::Parser()
 { commands = new CommandWords::commandWords(); }
 
-Command::Command* getCommand()
+Command::Command* Parser::getCommand()
 {
   //Tokenize
   char inputLine[40];
@@ -24,11 +24,23 @@ Command::Command* getCommand()
   char word2[30];
   
   char* firstSpace = strchr(inputLine, " ");
-  
+
+  //Messing around I found that the ptr - the str is the index of the last rest of the characters? Idrk how it works
   
   //Get word 1
 
+  strncpy(word1, inputLine, firstSpace - inputLine);
+
   //Get word 2
 
+  strcpy(word2, firstSpace + 1);
+
   //Check if command and return
+  if(commands.isCommand(word1) == true)
+    { return new Command::Command(word1, word2); }
+  else
+    { return new Command::Command(NULL, word2); }
 }
+
+void Parser::showCommands()
+{ commands.showAll(); }
