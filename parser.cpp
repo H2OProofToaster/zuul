@@ -10,7 +10,7 @@
 */
 
 Parser::Parser()
-{ commands = new CommandWords::commandWords(); }
+{ commands = new CommandWords(); }
 
 Command* Parser::getCommand()
 {
@@ -18,12 +18,12 @@ Command* Parser::getCommand()
   char inputLine[40];
   
   std::cout << "> ";
-  std::cin.get(21, inputLine);
+  std::cin.get(inputLine, 21);
 
   char word1[10];
   char word2[30];
   
-  char* firstSpace = strchr(inputLine, " ");
+  char* firstSpace = strchr(inputLine, 32); //ASCII for " "
 
   //Messing around I found that the ptr - the str is the index of the last rest of the characters? Idrk how it works
   
@@ -36,11 +36,14 @@ Command* Parser::getCommand()
   strcpy(word2, firstSpace + 1);
 
   //Check if command and return
-  if(commands.isCommand(word1) == true)
-    { return new Command::Command(word1, word2); }
+  if(commands->isCommand(word1) == true)
+    { return new Command(word1, word2); }
   else
-    { return new Command::Command(NULL, word2); }
+    { return new Command(NULL, word2); }
+
+  //Base return
+  return new Command(NULL, NULL);
 }
 
 void Parser::showCommands()
-{ commands.showAll(); }
+{ commands->showAll(); }

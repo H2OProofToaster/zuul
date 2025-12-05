@@ -18,7 +18,7 @@ class Parser
   void showCommands();
 
  private:
-  CommandWords commands;
+  CommandWords* commands;
 };
 
 #endif

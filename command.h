@@ -1,5 +1,6 @@
 #ifndef COMMAND_H
 #define COMMAND_H
+#include <iostream>
 
 /*
   Translated from the implementation of Zuul from Jason Galbraith
@@ -17,6 +18,6 @@ class Command
   char* getSecondWord();
   bool isUnknown();
   bool hasSecondWord();
-}
+};
 
 #endif

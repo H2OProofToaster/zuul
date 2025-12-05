@@ -93,11 +93,15 @@ bool Game::processCommand(Command* command)
 //Implementations of user commands
 
 //Uses item if in correct room
-void useItem(Item* command)
+void Game::useItem(Item* command)
 {
   if(command == NULL) { cout << "Use what?"; return; }
 
-  if(strcmp(command->getSolutionRoom(), Game::currentRoom) == 0) //Mmmmmmmmmmmmm loop thru the map
+  const char* currentRoomName;
+  for(auto& i : this->rooms)
+    { if(i.second == currentRoom) { currentRoomName = i.first; } }
+  
+  if(strcmp(command->getSolutionRoom(), currentRoomName) == 0) //Mmmmmmmmmmmmm loop thru the map
     {
       //Win conditions
       if(strcmp(command->getName(), "Food Note") == 0 and Game::winNum == 3)
@@ -114,20 +118,20 @@ void useItem(Item* command)
 	}
 
       cout << command->getSolutionText();
-      Game::inventory->removeItem(command);
+      Game::inventory->removeItem(command->getName());
     }
   else { cout << "You can't use that here"; }
 }
 
 //Print out some help information, here we print some stupid cryptic message and a list of all the command
-void printHelp()
+void Game::printHelp()
 {
   cout << "You are lost. You are alone. You wander around the school. \nYour command words are:";
   Game::parser->showCommands();
 }
 
 //Try to go one directions, if there is an exit, enter the new room, otherwise print an error message
-void goRoom(Command* command)
+void Game::goRoom(Command* command)
 {
   //If there is no second word, we don't know where to go
   if(!command->hasSecondWord()) { cout << "Go where?"; return; }
@@ -149,7 +153,7 @@ void goRoom(Command* command)
 
 //"Quit" was entered, check the rest fo the command we really quit the game
 //Return true, if this command quits the game, false otherwise
-bool quitGame(Command* command)
+bool Game::quitGame(Command* command)
 {
   if(command->hasSecondWord()) { cout << "Quit what?"; return false; }
   else { return true; }
@@ -158,110 +162,129 @@ bool quitGame(Command* command)
 //Create all the rooms and link their exits together
 void Game::createRooms()
 {
-  //Create the rooms
+  //Create the rooms, help from ChatGPT saying const char pointers are better and formatting all of it. 5/12/25
 
-  //Rooms, formatted by ChatGPT 17/11 (idk why it did that)
-  Game::rooms.at("myRoom",             new Room("where I sleep"));
-  Game::rooms.at("hallway",            new Room("where it's a hallway"));
-  Game::rooms.at("sisterRoom",         new Room("where it's pink"));
-  Game::rooms.at("parentRoom",         new Room("where my parents sleep"));
-  Game::rooms.at("parentBathroom",     new Room("where my parents bathe"));
-  Game::rooms.at("parentCloset",       new Room("where it's a closet"));
-  Game::rooms.at("laundryRoom",        new Room("where it has a big sink"));
-  Game::rooms.at("waterHeaterRoom",    new Room("where it's kinda scary here"));
-  Game::rooms.at("upstairsBathroom",   new Room("where my sister's side is messy"));
-  Game::rooms.at("office",             new Room("where it's not my office"));
-  Game::rooms.at("bonusRoom",          new Room("where it gets hot in here"));
-  Game::rooms.at("kitchen",            new Room("where it's food"));
-  Game::rooms.at("livingRoom",         new Room("where we live"));
-  Game::rooms.at("downstairsBathroom", new Room("where I use it sometimes"));
-  Game::rooms.at("guestBedroom",       new Room("where I don't use it sometimes"));
-  Game::rooms.at("foyer",              new Room("in the foyer I guess"));
-  Game::rooms.at("diningRoom",         new Room("eat here"));
-  Game::rooms.at("garage",             new Room("where the popsicles are"));
-  Game::rooms.at("wineCellar",         new Room("... well, what do you think is here"));
+  //Key consts
+  const char* MYROOM            = "myRoom";
+  const char* HALLWAY           = "hallway";
+  const char* SISTERROOM        = "sisterRoom";
+  const char* PARENTROOM        = "parentRoom";
+  const char* PARENTBATHROOM    = "parentBathroom";
+  const char* PARENTCLOSET      = "parentCloset";
+  const char* LAUNDRYROOM       = "laundryRoom";
+  const char* WATERHEATERROOM   = "waterHeaterRoom";
+  const char* UPBATHROOM        = "upstairsBathroom";
+  const char* OFFICE            = "office";
+  const char* BONUSROOM         = "bonusRoom";
+  const char* KITCHEN           = "kitchen";
+  const char* LIVINGROOM        = "livingRoom";
+  const char* DOWNBATHROOM      = "downstairsBathroom";
+  const char* GUESTBEDROOM      = "guestBedroom";
+  const char* FOYER             = "foyer";
+  const char* DININGROOM        = "diningRoom";
+  const char* GARAGE            = "garage";
+  const char* WINECELLAR        = "wineCellar";
 
-  //Set exits, formatted by ChatGPT 18/11 (I still don't know why it did that)
+  //Make rooms
+  this->rooms[MYROOM]          = new Room("where I sleep");
+  this->rooms[HALLWAY]         = new Room("where it's a hallway");
+  this->rooms[SISTERROOM]      = new Room("where it's pink");
+  this->rooms[PARENTROOM]      = new Room("where my parents sleep");
+  this->rooms[PARENTBATHROOM]  = new Room("where my parents bathe");
+  this->rooms[PARENTCLOSET]    = new Room("where it's a closet");
+  this->rooms[LAUNDRYROOM]     = new Room("where it has a big sink");
+  this->rooms[WATERHEATERROOM] = new Room("where it's kinda scary here");
+  this->rooms[UPBATHROOM]      = new Room("where my sister's side is messy");
+  this->rooms[OFFICE]          = new Room("where it's not my office");
+  this->rooms[BONUSROOM]       = new Room("where it gets hot in here");
+  this->rooms[KITCHEN]         = new Room("where it's food");
+  this->rooms[LIVINGROOM]      = new Room("where we live");
+  this->rooms[DOWNBATHROOM]    = new Room("where I use it sometimes");
+  this->rooms[GUESTBEDROOM]    = new Room("where I don't use it sometimes");
+  this->rooms[FOYER]           = new Room("in the foyer I guess");
+  this->rooms[DININGROOM]      = new Room("eat here");
+  this->rooms[GARAGE]          = new Room("where the popsicles are");
+  this->rooms[WINECELLAR]      = new Room("... well, what do you think is here");
+  
+  //Set exits
+  this->rooms[MYROOM]->setExit("Hallway", this->rooms[HALLWAY]);
 
-  Game::rooms.at("myRoom")->setExit("Hallway", &(Game::rooms.find("hallway")->second));
+  this->rooms[HALLWAY]->setExit("My Room", this->rooms[MYROOM]);
+  this->rooms[HALLWAY]->setExit("Sister's Room", this->rooms[SISTERROOM]);
+  this->rooms[HALLWAY]->setExit("Parent's Room", this->rooms[PARENTROOM]);
+  this->rooms[HALLWAY]->setExit("Laundry Room", this->rooms[LAUNDRYROOM]);
+  this->rooms[HALLWAY]->setExit("Upstairs Bathroom", this->rooms[UPBATHROOM]);
+  this->rooms[HALLWAY]->setExit("Office", this->rooms[OFFICE]);
+  this->rooms[HALLWAY]->setExit("Bonus Room", this->rooms[BONUSROOM]);
+  this->rooms[HALLWAY]->setExit("Kitchen", this->rooms[KITCHEN]);
 
-  Game::rooms.at("hallway")->setExit("My Room",            &(Game::rooms.find("myRoom")->second));
-  Game::rooms.at("hallway")->setExit("Sister's Room",      &(Game::rooms.find("sisterRoom")->second));
-  Game::rooms.at("hallway")->setExit("Parent's Room",      &(Game::rooms.find("parentRoom")->second));
-  Game::rooms.at("hallway")->setExit("Laundry Room",       &(Game::rooms.find("laundryRoom")->second));
-  Game::rooms.at("hallway")->setExit("Upstairs Bathroom",  &(Game::rooms.find("upstairsBathroom")->second));
-  Game::rooms.at("hallway")->setExit("Office",             &(Game::rooms.find("office")->second));
-  Game::rooms.at("hallway")->setExit("Bonus Room",         &(Game::rooms.find("bonusRoom")->second));
-  Game::rooms.at("hallway")->setExit("Kitchen",            &(Game::rooms.find("kitchen")->second));
+  this->rooms[SISTERROOM]->setExit("Hallway", this->rooms[HALLWAY]);
 
-  Game::rooms.at("sisterRoom")->setExit("Hallway", &(Game::rooms.find("hallway")->second));
+  this->rooms[PARENTROOM]->setExit("Hallway", this->rooms[HALLWAY]);
+  this->rooms[PARENTROOM]->setExit("Parent's Bathroom", this->rooms[PARENTBATHROOM]);
 
-  Game::rooms.at("parentRoom")->setExit("Hallway",            &(Game::rooms.find("hallway")->second));
-  Game::rooms.at("parentRoom")->setExit("Parent's Bathroom",  &(Game::rooms.find("parentBathroom")->second));
+  this->rooms[PARENTBATHROOM]->setExit("Parent's Room", this->rooms[PARENTROOM]);
+  this->rooms[PARENTBATHROOM]->setExit("Parent's Closet", this->rooms[PARENTCLOSET]);
 
-  Game::rooms.at("parentBathroom")->setExit("Parent's Room",     &(Game::rooms.find("parentRoom")->second));
-  Game::rooms.at("parentBathroom")->setExit("Parent's Closet",   &(Game::rooms.find("parentCloset")->second));
+  this->rooms[PARENTCLOSET]->setExit("Parent's Bathroom", this->rooms[PARENTBATHROOM]);
   
-  Game::rooms.at("parentCloset")->setExit("Parent's Bathroom", &(Game::rooms.find("parentBathroom")->second));
+  this->rooms[LAUNDRYROOM]->setExit("Hallway", this->rooms[HALLWAY]);
+  this->rooms[LAUNDRYROOM]->setExit("Water Heater Room", this->rooms[WATERHEATERROOM]);
   
-  Game::rooms.at("laundryRoom")->setExit("Hallway",            &(Game::rooms.find("hallway")->second));
-  Game::rooms.at("laundryRoom")->setExit("Water Heater Room",  &(Game::rooms.find("waterHeaterRoom")->second));
+  this->rooms[WATERHEATERROOM]->setExit("Laundry Room", this->rooms[LAUNDRYROOM]);
   
-  Game::rooms.at("waterHeaterRoom")->setExit("Laundry Room", &(Game::rooms.find("laundryRoom")->second));
+  this->rooms[UPBATHROOM]->setExit("Hallway", this->rooms[HALLWAY]);
   
-  Game::rooms.at("upstairsBathroom")->setExit("Hallway", &(Game::rooms.find("hallway")->second));
+  this->rooms[OFFICE]->setExit("Hallway", this->rooms[HALLWAY]);
   
-  Game::rooms.at("office")->setExit("Hallway", &(Game::rooms.find("hallway")->second));
+  this->rooms[BONUSROOM]->setExit("Hallway", this->rooms[HALLWAY]);
   
-  Game::rooms.at("bonusRoom")->setExit("Hallway", &(Game::rooms.find("hallway")->second));
-  
-  Game::rooms.at("kitchen")->setExit("Hallway",      &(Game::rooms.find("hallway")->second));
-  Game::rooms.at("kitchen")->setExit("Living Room",  &(Game::rooms.find("livingRoom")->second));
-  Game::rooms.at("kitchen")->setExit("Dining Room",  &(Game::rooms.find("diningRoom")->second));
-  Game::rooms.at("kitchen")->setExit("Foyer",        &(Game::rooms.find("foyer")->second));
-  
-  Game::rooms.at("livingRoom")->setExit("Kitchen",               &(Game::rooms.find("kitchen")->second));
-  Game::rooms.at("livingRoom")->setExit("Wine Cellar",           &(Game::rooms.find("wineCellar")->second));
-  Game::rooms.at("livingRoom")->setExit("Downstairs Bathroom",   &(Game::rooms.find("downstairsBathroom")->second));
-  Game::rooms.at("livingRoom")->setExit("Guest Bedroom",         &(Game::rooms.find("guestBedroom")->second));
-  
-  Game::rooms.at("downstairsBathroom")->setExit("Living Room", &(Game::rooms.find("livingRoom")->second));
-  
-  Game::rooms.at("guestBedroom")->setExit("Living Room", &(Game::rooms.find("livingRoom")->second));
-  
-  Game::rooms.at("wineCellar")->setExit("Living Room", &(Game::rooms.find("livingRoom")->second));
-  
-  Game::rooms.at("diningRoom")->setExit("Kitchen", &(Game::rooms.find("kitchen")->second));
-  Game::rooms.at("diningRoom")->setExit("Foyer",   &(Game::rooms.find("foyer")->second));
+  this->rooms[KITCHEN]->setExit("Hallway", this->rooms[HALLWAY]);
+  this->rooms[KITCHEN]->setExit("Living Room", this->rooms[LIVINGROOM]);
+  this->rooms[KITCHEN]->setExit("Dining Room", this->rooms[DININGROOM]);
+  this->rooms[KITCHEN]->setExit("Foyer", this->rooms[FOYER]);
 
-  Game::rooms.at("foyer")->setExit("Kitchen",      &(Game::rooms.find("kitchen")->second));
-  Game::rooms.at("foyer")->setExit("Garage",       &(Game::rooms.find("garage")->second));
-  Game::rooms.at("foyer")->setExit("Dining Room",  &(Game::rooms.find("diningRoom")->second));
+  this->rooms[LIVINGROOM]->setExit("Kitchen", this->rooms[KITCHEN]);
+  this->rooms[LIVINGROOM]->setExit("Wine Cellar", this->rooms[WINECELLAR]);
+  this->rooms[LIVINGROOM]->setExit("Downstairs Bathroom", this->rooms[DOWNBATHROOM]);
+  this->rooms[LIVINGROOM]->setExit("Guest Bedroom", this->rooms[GUESTBEDROOM]);
   
-  Game::rooms.at("garage")->setExit("Foyer", &(Game::rooms.find("foyer")->second));
+  this->rooms[DOWNBATHROOM]->setExit("Living Room", this->rooms[LIVINGROOM]);
+  
+  this->rooms[GUESTBEDROOM]->setExit("Living Room", this->rooms[LIVINGROOM]);
+  
+  this->rooms[WINECELLAR]->setExit("Living Room", this->rooms[LIVINGROOM]);
+  
+  this->rooms[DININGROOM]->setExit("Kitchen", this->rooms[KITCHEN]);
+  this->rooms[DININGROOM]->setExit("Foyer", this->rooms[FOYER]);
+  
+  this->rooms[FOYER]->setExit("Kitchen", this->rooms[KITCHEN]);
+  this->rooms[FOYER]->setExit("Garage", this->rooms[GARAGE]);
+  this->rooms[FOYER]->setExit("Dining Room", this->rooms[DININGROOM]);
+  
+  this->rooms[GARAGE]->setExit("Foyer", this->rooms[FOYER]);
 
-  
   //Add Items
-  Game::rooms.at("myRoom")->addItem("Food Note",
+  this->rooms.at("myRoom")->addItem("Food Note",
 				   "You need to get some food:\n1. Gouda Cheese Bites\n2. Brie\n3. Popsicles\nAnd return to your room.",
 				   "myRoom",
 				   "You have successfully gathered the snacks!\nYou win!");
-  Game::rooms.at("hallway")->addItem("Kamala Harris",
+  this->rooms.at("hallway")->addItem("Kamala Harris",
 				    "A cardboard standee of Kamala Harris.\nAdorned with a rainbow inflatable crown, green gummy bear chains, and a hawaiian shirt.",
 				    "None",
 				    "None");
-  Game::rooms.at("garage")->addItem("Popsicles",
+  this->rooms.at("garage")->addItem("Popsicles",
 				    "They are of flavor pineapple.",
 				    "myRoom",
 				    "That was delicious.");
-  Game::rooms.at("kitchen")->addItem("Gouda Chese Bites",
+  this->rooms.at("kitchen")->addItem("Gouda Chese Bites",
 				     "There must be something other than cheese in this, I'm addicted.",
 				     "myRoom",
 				     "That was delicious.");
-  Game::rooms.at("kitchen")->addItme("Brie",
+  this->rooms.at("kitchen")->addItem("Brie",
 				     "A very good melting cheese, enjoy with bread.",
 				     "myRoom",
 				     "That was delicious.");
 
-  Game::currentRoom = &(Game::rooms.find("foyer")->second);
+  Game::currentRoom = this->rooms[FOYER];
 }

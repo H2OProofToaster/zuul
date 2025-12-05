@@ -4,7 +4,7 @@
 #include "inventory.h"
 #include <iostream>
 #include "item.h"
-#inlcude <vector>
+#include <vector>
 
 /*
   Translated from the implementation of Zuul from Jason Galbraith
@@ -14,35 +14,38 @@
 Room::Room(char* descriptionIn)
 {
   strcpy(description, descriptionIn);
-  inventory = new Inventory();
+  this->inventory = new Inventory();
 }
 
 void Room::addItem(char* name, char* description, char* solutionRoom, char* solutionText)
-{ inventory.addItem(name, description, solutionRoom, solutionText); }
+{ this->inventory->addItem(name, description, solutionRoom, solutionText); }
+
+void Room::removeItem(char* name)
+{ this->inventory->removeItem(name); }
 
 void Room::setExit(char* direction, Room* neighbor)
-{ exits[direction] = neighbor; }
+{ this->exits[direction] = neighbor; }
 
-char* getShortDescription()
-{ return Room::description; }
+char* Room::getShortDescription()
+{ return this->description; }
 
-void printLongDescription()
+void Room::printLongDescription()
 {
-  std::cout << "You are " << Room::description << "." << std::endl;
+  std::cout << "You are " << this->description << "." << std::endl;
 
   //Modified from w3schools.com
-  for(int i = Room::exits.begin(); i != Room::exits.end(); i++)
+  for(auto i = this->exits.begin(); i != this->exits.end(); i++)
     {
-      if(i == Room::exits.end()) { std::cout << i->first; }
+      if(i == this->exits.end()) { std::cout << i->first; }
       std::cout << i->first << ", ";
     }
 }
 
-Room* getExit(char* direction)
-{ return Room::exits[direction]; }
+Room* Room::getExit(char* direction)
+{ return this->exits[direction]; }
 
-Item* getItem(char* name)
-{ return Room::inventory.getItem(name); }
+Item* Room::getItem(char* name)
+{ return this->inventory->getItem(name); }
 
-std::vector<Item*> getItems()
-{ return Room::inventory.getItems(); }
+std::vector<Item*> Room::getItems()
+{ return this->inventory->getItems(); }

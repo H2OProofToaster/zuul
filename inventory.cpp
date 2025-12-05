@@ -1,4 +1,5 @@
 #include "inventory.h"
+#include "item.h"
 #include <vector>
 
 /*
@@ -11,32 +12,32 @@ Inventory::Inventory() {}
 //Adds items with a name, description, the room it's used in, and the win text
 void Inventory::addItem(char* name, char* description, char* solutionRoom, char* solutionText)
 {
-  items.push_back(new Item::Item(name, description, solutionRoom, solutionText)*);
+  this->items.push_back(new Item(name, description, solutionRoom, solutionText));
 }
 
 //I don't wanna do this
 //Removes an item from an inventory
 void Inventory::removeItem(char* name)
 {
-  for(int i = 0; i < items.size(); i++)
+  for(int i = 0; i < this->items.size(); i++)
     {
-      if(strcmp(items[i]->getName(), name) == 0)
+      if(strcmp(this->items[i]->getName(), name) == 0)
 	{
-	  delete items[i];
-	  items.erase(items.begin() + i);
+	  delete this->items[i];
+	  this->items.erase(this->items.begin() + i);
 	}
     }
 }
 
 //Returns a pointer to an item with a specific name
-Item::Item* getItem(char* name)
+Item* Inventory::getItem(char* name)
 {
-  for(int i = 0; i < items.size(); i++)
+  for(int i = 0; i < this->items.size(); i++)
     {
-      if(strcmp(items[i]->getName(), name) == 0) { return items[i]; }
+      if(strcmp(this->items[i]->getName(), name) == 0) { return this->items[i]; }
     }
   return nullptr;
 }
 
-vector<Item::Item*> getItems()
-{ return items; }
+std::vector<Item*> Inventory::getItems()
+{ return this->items; }

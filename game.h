@@ -21,14 +21,15 @@ class Game
   static Parser* parser;
   static Room* currentRoom;
 
+ protected:
   //Holds items
   Inventory* inventory;
   int winNum;
 
   //Holds rooms
-  std::map<std::string, Room*> rooms;
+  std::map<const char*, Room*> rooms;
 
- private:
+private:
   void printWelcome();
   bool processCommand(Command* command);
   void useItem(Item* command);

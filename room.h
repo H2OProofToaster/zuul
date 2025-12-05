@@ -28,7 +28,7 @@ class Room
  private:
   std::map<char*, Room*> exits;
   char* description;
-  Inventory inventory;
+  Inventory* inventory;
 };
 
 #endif
