@@ -55,6 +55,9 @@ void Game::printWelcome()
 //If theis command ends the game, true is returned, otherwise false is returned
 bool Game::processCommand(Command* command)
 {
+  //Debug
+  cout << endl << "DEBUG" << endl << "Command word: " << command->getCommandWord() << endl << "Command second word: " << command->getSecondWord() << endl;
+  
   bool wantToQuit = false;
 
   if(command == NULL) { return false; }

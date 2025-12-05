@@ -1,4 +1,7 @@
 #include "command.h"
+#include <iostream>
+
+using namespace std;
 
 /*
   Translated from the implementation of Zuul from Jason Galbraith

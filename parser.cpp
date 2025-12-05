@@ -9,6 +9,8 @@
   https://drive.google.com/drive/folders/18O6fa2z_WlCBkEIG1eKb8Y57l-PoGaWy
 */
 
+using namespace std;
+
 Parser::Parser()
 { commands = new CommandWords(); }
 
@@ -17,9 +19,9 @@ Command* Parser::getCommand()
   //Tokenize
   char inputLine[40];
   
-  std::cout << "> ";
-  std::cin.get(inputLine, 21);
-
+  cout << "> ";
+  cin.get(inputLine, 41);
+  
   char word1[10];
   char word2[30];
   
@@ -30,6 +32,7 @@ Command* Parser::getCommand()
   //Get word 1
 
   strncpy(word1, inputLine, firstSpace - inputLine);
+  word1[firstSpace - inputLine] = '\0';
 
   //Get word 2
 
@@ -43,6 +46,7 @@ Command* Parser::getCommand()
 
   //Base return
   return new Command(NULL, NULL);
+  cout << "Something went wrong, null null command" << endl;
 }
 
 void Parser::showCommands()

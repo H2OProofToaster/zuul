@@ -13,7 +13,7 @@
 
 Room::Room(char* descriptionIn)
 {
-  strcpy(description, descriptionIn);
+  this->description = descriptionIn;
   this->inventory = new Inventory();
 }
 
@@ -39,6 +39,9 @@ void Room::printLongDescription()
       if(i == this->exits.end()) { std::cout << i->first; }
       std::cout << i->first << ", ";
     }
+
+  //Newline for parser "<"
+  std::cout << std::endl;
 }
 
 Room* Room::getExit(char* direction)
