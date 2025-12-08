@@ -24,8 +24,9 @@ class Room
   Room* getExit(char* direction);
   Item* getItem(char* name);
   std::vector<Item*> getItems();
-  
- private:
+  Inventory* getInventory();
+
+private:
   std::map<char*, Room*> exits;
   char* description;
   Inventory* inventory;

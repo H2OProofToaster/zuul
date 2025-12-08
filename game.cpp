@@ -55,19 +55,16 @@ void Game::printWelcome()
 //If theis command ends the game, true is returned, otherwise false is returned
 bool Game::processCommand(Command* command)
 {
-  //Debug
-  cout << endl << "DEBUG" << endl << "Command word: " << command->getCommandWord() << endl << "Command second word: " << command->getSecondWord() << endl;
-  
   bool wantToQuit = false;
 
-  if(command == NULL) { return false; }
+  if(command->getCommandWord() == nullptr) { return false; }
 
   if(command->isUnknown()) { cout << "I don't know what you mean..."; return false; }
 
   char* commandWord = command->getCommandWord();
 
   if(strcmp(commandWord, "help") == 0) { Game::printHelp(); }
-  else if(strcmp(commandWord, "go")) { Game::goRoom(command); }
+  else if(strcmp(commandWord, "go") == 0) { Game::goRoom(command); }
   else if(strcmp(commandWord, "inventory") == 0)
     {
       for(int i = 0; i < inventory->getItems().size(); i++) { cout << inventory->getItems()[i]->getName(); }
@@ -77,17 +74,13 @@ bool Game::processCommand(Command* command)
   else if(strcmp(commandWord, "drop") == 0)
     {
       if(strcmp(command->getSecondWord(), "") == 0) { cout << "Drop what?"; return wantToQuit; }
-      Item* itemTemp = inventory->getItem(command->getSecondWord());
-      inventory->removeItem(itemTemp->getName());
-      Game::currentRoom->addItem(itemTemp->getName(), itemTemp->getDescription(), itemTemp->getSolutionRoom(), itemTemp->getSolutionText());
+      inventory->moveItem(currentRoom->getInventory(), inventory->getItem(command->getSecondWord()));
     }
   else if(strcmp(commandWord, "pickup") == 0)
     {
-      if(strcmp(command->getSecondWord(), "")) { cout << "Pickup what?"; return wantToQuit; }
-      Item* itemTemp = Game::currentRoom->getItem(command->getSecondWord());
-      Game::currentRoom->removeItem(itemTemp->getName());
-      inventory->addItem(itemTemp->getName(), itemTemp->getDescription(), itemTemp->getSolutionRoom(), itemTemp->getSolutionText());
-      cout << itemTemp->getDescription();
+      if(strcmp(command->getSecondWord(), "") == 0) { cout << "Pickup what?"; return wantToQuit; }
+      inventory->moveItem(currentRoom->getInventory(), currentRoom->getItem(command->getSecondWord()));
+      cout << inventory->getItem(command->getSecondWord())->getDescription();
     }
 
   return wantToQuit;
@@ -139,19 +132,19 @@ void Game::goRoom(Command* command)
   //If there is no second word, we don't know where to go
   if(!command->hasSecondWord()) { cout << "Go where?"; return; }
 
-  Room* nextRoom = Game::currentRoom->getExit(command->getSecondWord());
+  Room* nextRoom = currentRoom->getExit(command->getSecondWord());
 
   //Try to leave current room
   if(nextRoom == NULL) { cout << "There is no door!"; }
   else
-    {
-      Game::currentRoom = nextRoom;
-      Game::currentRoom->printLongDescription(); //Just couts internally in room.cpp
+  {
+    currentRoom = nextRoom;
+    currentRoom->printLongDescription(); //Just couts internally in room.cpp
 
-      //Prints out items in room, if any
-      if(Game::currentRoom->getItems().size() > 0) { cout << "There are items:"; }
-      for(int i = 0; i < Game::currentRoom->getItems().size(); i++) { cout << Game::currentRoom->getItems()[i]->getName(); }
-    }
+    //Prints out items in room, if any
+    if(!currentRoom->getItems().empty()) { cout << "There are items: "; }
+    for(int i = 0; i < currentRoom->getItems().size(); i++) { cout << currentRoom->getItems()[i]->getName() << ", "; }
+  }
 }
 
 //"Quit" was entered, check the rest fo the command we really quit the game

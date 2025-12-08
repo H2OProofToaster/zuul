@@ -22,7 +22,7 @@ char* Command::getCommandWord() { return commandWord; }
 char* Command::getSecondWord() { return secondWord; }
 
 //Return true if this command was not understood
-bool Command::isUnknown() { return commandWord == NULL; }
+bool Command::isUnknown() { return commandWord == nullptr; }
 
 //Return true if the command has a second word
-bool Command::hasSecondWord() { return secondWord != NULL; }
+bool Command::hasSecondWord() { return secondWord != nullptr; }

@@ -18,7 +18,9 @@ class Inventory
  public:
   Inventory();
   void addItem(char* name, char* description, char* solutionRoom, char* solutionText);
+  void addItem(Item* item);
   void removeItem(char* name);
+  void moveItem(Inventory* inventory, Item* item);
   Item* getItem(char* name);
   std::vector<Item*> getItems();
 };

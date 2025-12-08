@@ -39,16 +39,21 @@ void Room::printLongDescription()
       if(i == this->exits.end()) { std::cout << i->first; }
       std::cout << i->first << ", ";
     }
-
-  //Newline for parser "<"
-  std::cout << std::endl;
 }
 
 Room* Room::getExit(char* direction)
-{ return this->exits[direction]; }
+{
+  for(auto i = this->exits.begin(); i != this->exits.end(); i++)
+  {
+    if(strcmp(i->first, direction) == 0) { return i->second; }
+  }
+}
 
 Item* Room::getItem(char* name)
 { return this->inventory->getItem(name); }
 
 std::vector<Item*> Room::getItems()
 { return this->inventory->getItems(); }
+
+Inventory* Room::getInventory()
+{ return this->inventory; }

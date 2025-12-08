@@ -15,7 +15,11 @@ void Inventory::addItem(char* name, char* description, char* solutionRoom, char*
   this->items.push_back(new Item(name, description, solutionRoom, solutionText));
 }
 
-//I don't wanna do this
+void Inventory::addItem(Item* item)
+{
+  this->items.push_back(item);
+}
+
 //Removes an item from an inventory
 void Inventory::removeItem(char* name)
 {
@@ -29,14 +33,20 @@ void Inventory::removeItem(char* name)
     }
 }
 
-//Returns a pointer to an item with a specific name
+//Takes in another inventory ptr and switches where the item ptr is
+void Inventory::moveItem(Inventory* inventory, Item* item)
+{
+  this->items.push_back(item);
+  inventory->removeItem(item->getName());
+}
+
+//Just for printing and stuff
 Item* Inventory::getItem(char* name)
 {
   for(int i = 0; i < this->items.size(); i++)
-    {
-      if(strcmp(this->items[i]->getName(), name) == 0) { return this->items[i]; }
-    }
-  return nullptr;
+  {
+    if(strcmp(this->items[i]->getName(), name) == 0) { return this->items[i]; }
+  }
 }
 
 std::vector<Item*> Inventory::getItems()
