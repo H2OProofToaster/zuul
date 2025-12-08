@@ -20,10 +20,10 @@ class Item
   char* getSolutionText();
 
  private:
-  char* name;
-  char* description;
-  char* solutionRoom;
-  char* solutionText;
+  char name[18];
+  char description[125];
+  char solutionRoom[7];
+  char solutionText[51];
 };
 
 #endif

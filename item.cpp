@@ -9,10 +9,10 @@
 
 Item::Item(char* nameIn, char* descriptionIn, char* solutionRoomIn, char* solutionTextIn)
 {
-  this->name = nameIn;
-  this->description = descriptionIn;
-  this->solutionRoom = solutionRoomIn;
-  this->solutionText = solutionTextIn;
+  strcpy(name, nameIn);
+  strcpy(description, descriptionIn);
+  strcpy(solutionRoom, solutionRoomIn);
+  strcpy(solutionText, solutionTextIn);
 }
 
 

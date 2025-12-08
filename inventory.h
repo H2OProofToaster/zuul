@@ -13,7 +13,7 @@
 class Inventory
 {
  private:
-  std::vector<Item*> items;
+  std::vector<Item*>* items;
 
  public:
   Inventory();
