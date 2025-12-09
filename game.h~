@@ -1,0 +1,15 @@
+#ifndef GAME_H
+#define GAME_H
+
+#include "inventory.h"
+
+class Game
+{
+ public:
+  Game();
+  
+ private:
+  Inventory::Inventory* inventory;
+  int winNum;
+  
+#endif

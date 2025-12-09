@@ -26,29 +26,31 @@ void Inventory::addItem(Item* item)
 //Removes an item from an inventory
 void Inventory::removeItem(char* name)
 {
-  for(int i = 0; i < this->items->size(); i++)
+  std::vector<Item*>::iterator it;
+  for(it = items->begin(); it != items->end(); ++it)
     {
-      if(strcmp(this->items->at(i)->getName(), name) == 0)
+      if((*it)->getName() == name)
 	{
-	  delete this->items->at(i);
-	  this->items->erase(this->items->begin() + i);
+	  delete (*it);
+	  items->erase(it);
+	  break;
 	}
     }
 }
 
-//Takes in another inventory ptr and switches where the item ptr is
 void Inventory::moveItem(Inventory* inventory, Item* item)
 {
-  items->push_back(item);
+  items->push_back(item); //Puts item ptr in called inventory's inventory
   inventory->removeItem(item->getName());
 }
 
 //Just for printing and stuff
 Item* Inventory::getItem(char* name)
 {
-  for(int i = 0; i < this->items->size(); i++)
+  std::vector<Item*>::iterator it;
+  for(it = items->begin(); it != items->end(); ++it)
   {
-    if(strcmp(this->items->at(i)->getName(), name) == 0) { return this->items->at(i); }
+    if(strcmp((*it)->getName(), name) == 0) { return *it; }
   }
 }
 

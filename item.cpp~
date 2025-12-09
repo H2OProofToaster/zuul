@@ -1,0 +1,16 @@
+#include "item.h"
+#include <cstring>
+
+Item::Item(char* nameIn, char* descriptionIn, char* solutionRoomIn, char* solutionTextIn)
+{
+  strcpy(name, nameIn);
+  strcpy(description, descriptionIn);
+  strcpy(solutionRoom, solutionRoomIn);
+  strcpy(solutionText, solutionTextIn);
+}
+
+
+char* Item::getName() { return name; }
+char* Item::getDescription() { return description; }
+char* Item::getSolutionRoom() { return solutionRoom; }
+char* Item::getSolutionText() { return solutionText; }

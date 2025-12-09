@@ -22,7 +22,7 @@ Room* Game::currentRoom;
 Game::Game()
 {
   Game::createRooms();
-  Inventory* inventory = new Inventory();
+  inventory = new Inventory();
   winNum = 0;
 }
 
@@ -67,7 +67,8 @@ bool Game::processCommand(Command* command)
   else if(strcmp(commandWord, "go") == 0) { Game::goRoom(command); }
   else if(strcmp(commandWord, "inventory") == 0)
     {
-      for(int i = 0; i < inventory->getItems().size(); i++) { cout << inventory->getItems()[i]->getName(); }
+      vector<Item*>::iterator it;
+      for(it = inventory->getItems().begin(); it != inventory->getItems().end(); ++it) { cout << (*it)->getName(); }
     }
   else if(strcmp(commandWord, "quit") == 0) { wantToQuit = Game::quitGame(command); }
   else if(strcmp(commandWord, "use") == 0) { Game::useItem(inventory->getItem(command->getSecondWord())); }
