@@ -22,6 +22,7 @@ class Inventory
   void removeItem(char* name);
   void moveItem(Inventory* inventory, Item* item);
   Item* getItem(char* name);
+  void showItems();
   std::vector<Item*> getItems();
 };
 

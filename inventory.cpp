@@ -1,6 +1,7 @@
 #include "inventory.h"
 #include "item.h"
 #include <vector>
+#include <iostream>
 
 /*
   Translated from the implementation of Zuul from Jason Galbraith
@@ -31,8 +32,8 @@ void Inventory::removeItem(char* name)
     {
       if((*it)->getName() == name)
 	{
-	  delete (*it);
 	  items->erase(it);
+	  std::cout << items->size();
 	  break;
 	}
     }
@@ -40,8 +41,24 @@ void Inventory::removeItem(char* name)
 
 void Inventory::moveItem(Inventory* inventory, Item* item)
 {
+  std::cout << "Self inventory:";
+  this->showItems();
+  std::cout << "Other inventory:";
+  inventory->showItems();
+
   items->push_back(item); //Puts item ptr in called inventory's inventory
+
+  std::cout << "Self inventory:";
+  this->showItems();
+  std::cout << "Other inventory:";
+  inventory->showItems();
+
   inventory->removeItem(item->getName());
+  
+  std::cout << "Self inventory:";
+  this->showItems();
+  std::cout << "Other inventory:";
+  inventory->showItems();
 }
 
 //Just for printing and stuff
@@ -52,6 +69,15 @@ Item* Inventory::getItem(char* name)
   {
     if(strcmp((*it)->getName(), name) == 0) { return *it; }
   }
+}
+
+void Inventory::showItems()
+{
+  std::vector<Item*>::iterator it;
+  for(it = items->begin(); it != items->end(); ++it)
+    {
+      std::cout << (*it)->getName();
+    }
 }
 
 std::vector<Item*> Inventory::getItems()
