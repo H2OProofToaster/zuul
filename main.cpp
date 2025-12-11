@@ -10,7 +10,9 @@
   use "quit" to exit
   Quick solution
   1. Go to garage, get popsicles
-  2. Go to kitchen, get gouda chese bites (yes 
+  2. Go to kitchen, get gouda chese bites (yes it's spelled wrong), get brie
+  3. Go to hallway
+  4. Go to myRoom, get food note, use all food, then use food note
 */
 
 int main() {
